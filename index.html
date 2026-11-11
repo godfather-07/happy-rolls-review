@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Happy Rolls Kakkanad — Google Review Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--ink:#0B1D3A;--ink2:#5A6B82;--ink3:#9AAFC4;
+--blue:#1E6AFF;--blue-hover:#1558D9;--blue-glow:rgba(30,106,255,0.25);--blue-tint:#E8F0FE;
+--ice:#F6F8FB;--card:#fff;
+--border:rgba(11,29,58,0.06);
+--r:14px;
+--sh:0 1px 2px rgba(11,29,58,0.04),0 4px 16px rgba(11,29,58,0.06);
+--sh-btn:0 2px 0 rgba(11,29,58,0.08);
+--sh-btn-blue:0 3px 0 #1350B8,0 6px 20px rgba(30,106,255,0.3);
+}
+@media(prefers-color-scheme:dark){:root{
+--ink:#E8EDF4;--ink2:#8A9BB5;--ink3:#4A5A6E;
+--blue:#4D8FFF;--blue-hover:#6AA3FF;--blue-glow:rgba(77,143,255,0.3);--blue-tint:#0D1F3D;
+--ice:#0A0E14;--card:#12181F;
+--border:rgba(255,255,255,0.06);
+--sh:0 1px 4px rgba(0,0,0,0.3);
+--sh-btn:0 2px 0 rgba(0,0,0,0.3);
+--sh-btn-blue:0 3px 0 #0F3B8C,0 6px 20px rgba(30,106,255,0.2);
+}}
+html{-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',system-ui,sans-serif;background:var(--ice);color:var(--ink);line-height:1.5;padding:0;-webkit-font-smoothing:antialiased;font-feature-settings:'ss01','cv01'}
+.wrap{max-width:440px;margin:0 auto;padding:12px 14px 48px}
+
+.hdr{text-align:center;padding:36px 24px 32px;background:var(--ink);border-radius:20px;margin-bottom:10px;position:relative;overflow:hidden}
+@media(prefers-color-scheme:dark){.hdr{background:#12181F;border:1px solid var(--border)}}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 30% 20%,rgba(30,106,255,0.15) 0%,transparent 60%),radial-gradient(circle at 80% 80%,rgba(30,106,255,0.08) 0%,transparent 50%);pointer-events:none}
+.logo{font-size:34px;font-weight:900;color:#fff;letter-spacing:-1.2px;position:relative}
+.logo-ar{font-size:13px;color:rgba(255,255,255,0.4);margin-top:2px;font-weight:400;letter-spacing:1.5px}
+.tagline{font-size:13px;color:var(--blue);margin-top:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;position:relative}
+.hdr-pills{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap;position:relative}
+.hdr-pill{font-size:11px;padding:5px 14px;border-radius:100px;font-weight:600;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.06)}
+
+.cta{background:var(--blue-tint);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;font-size:13px;display:flex;align-items:center;gap:10px;color:var(--ink2);line-height:1.5;font-weight:500}
+.cta b{color:var(--blue)}
+
+.cd{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:20px;margin-bottom:8px}
+.cd-title{font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:12px;letter-spacing:1.2px;text-transform:uppercase}
+
+.stars{display:flex;gap:2px;justify-content:center;padding:4px 0}
+.star{width:52px;height:52px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--border);border:none;background:none;opacity:0.35}
+.star.active{color:#FFB800;opacity:1;transform:scale(1.12);filter:drop-shadow(0 2px 6px rgba(255,184,0,0.35))}
+
+.temps{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding:2px 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.temps::-webkit-scrollbar{display:none}
+.temp{white-space:nowrap;padding:9px 18px;border-radius:10px;border:none;font-size:13px;cursor:pointer;background:var(--ice);color:var(--ink2);font-weight:600;transition:all 0.15s;box-shadow:var(--sh-btn);font-family:inherit}
+.temp:active{transform:translateY(1px);box-shadow:none}
+.temp.active{background:var(--blue);color:#fff;box-shadow:var(--sh-btn-blue)}
+
+.cat-hd{font-size:11px;font-weight:700;color:var(--ink3);margin:16px 0 8px;letter-spacing:1px;text-transform:uppercase}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{padding:9px 16px;border-radius:10px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;transition:all 0.15s;background:var(--card);color:var(--ink2);user-select:none;font-weight:500;font-family:inherit;box-shadow:var(--sh-btn)}
+.pill:active{transform:translateY(1px);box-shadow:none}
+.pill.selected{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:var(--sh-btn-blue)}
+.pill-neg{border-style:dashed;border-color:var(--ink3);color:var(--ink3);font-style:italic}
+.pill-neg.selected{background:var(--ink);color:#fff;border-color:var(--ink);border-style:solid;box-shadow:var(--sh-btn)}
+.neg-input-wrap{max-height:0;overflow:hidden;transition:max-height 0.25s ease}
+.neg-input-wrap.open{max-height:80px;margin-top:8px}
+.neg-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;background:var(--ice);color:var(--ink);resize:none;transition:border 0.2s}
+.neg-input:focus{outline:none;border-color:var(--blue)}
+.neg-input::placeholder{color:var(--ink3)}
+
+.input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;background:var(--ice);color:var(--ink);font-family:inherit;transition:all 0.2s;font-weight:500}
+.input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-glow)}
+.input::placeholder{color:var(--ink3);font-weight:400}
+textarea.input{min-height:110px;resize:none;line-height:1.55}
+
+.meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.meta-chars{font-size:12px;color:var(--ink3);font-weight:500;font-variant-numeric:tabular-nums}
+.seo{font-size:11px;font-weight:700;padding:4px 12px;border-radius:100px}
+.seo-lo{background:rgba(255,59,48,0.08);color:#E03E36}
+.seo-mid{background:rgba(255,149,0,0.08);color:#CC7700}
+.seo-hi{background:rgba(52,199,89,0.08);color:#28964A}
+
+.photo-row{display:flex;gap:8px;margin-top:6px}
+.photo-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:18px 10px;border-radius:10px;border:1.5px dashed var(--border);background:var(--ice);cursor:pointer;transition:all 0.15s;color:var(--ink3);font-size:12px;font-weight:600;font-family:inherit}
+.photo-btn:active{background:var(--blue-tint);border-color:var(--blue);color:var(--blue)}
+.photo-btn svg{width:24px;height:24px}
+.photo-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.photo-wrap{position:relative}
+.photo-thumb{width:68px;height:68px;border-radius:10px;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.photo-rm{position:absolute;top:-5px;right:-5px;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;border:2px solid var(--card);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;line-height:1}
+
+.actions{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;padding:16px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:-0.2px;font-family:inherit;transition:all 0.1s}
+.btn-copy{background:var(--card);color:var(--ink);border:1.5px solid var(--border);box-shadow:var(--sh-btn)}
+.btn-copy:active{transform:translateY(2px);box-shadow:none}
+.btn-post{background:linear-gradient(180deg,#3B82F6 0%,var(--blue) 100%);color:#fff;box-shadow:var(--sh-btn-blue);position:relative;overflow:hidden}
+.btn-post::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.15) 0%,transparent 100%);pointer-events:none;border-radius:12px 12px 0 0}
+.btn-post:active{transform:translateY(3px);box-shadow:0 1px 0 #1350B8,0 2px 8px rgba(30,106,255,0.2)}
+
+.glink-panel{display:none;margin-top:10px;background:var(--blue-tint);border-radius:var(--r);padding:16px;text-align:center;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.glink-panel p{font-size:13px;color:var(--ink2);margin-bottom:10px;font-weight:500;line-height:1.5}
+.glink-panel p strong{color:var(--ink)}
+.glink-btn{display:inline-flex;align-items:center;gap:6px;padding:12px 24px;border-radius:10px;background:var(--blue);color:#fff;text-decoration:none;font-size:14px;font-weight:700;font-family:inherit;box-shadow:var(--sh-btn-blue);transition:all 0.1s}
+.glink-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #1350B8}
+.glink-btn svg{width:16px;height:16px}
+
+.prev{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:18px;margin-top:8px}
+.prev-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.prev-av{width:40px;height:40px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:17px}
+.prev-name{font-weight:700;font-size:14px}
+.prev-stars{color:#FFB800;font-size:14px;margin-top:1px}
+.prev-body{font-size:13px;color:var(--ink2);line-height:1.6}
+.prev-photos{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.prev-photos img{width:56px;height:56px;border-radius:8px;object-fit:cover}
+
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ink);color:#fff;padding:14px 26px;border-radius:12px;font-size:14px;font-weight:600;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:99;box-shadow:0 8px 30px rgba(0,0,0,0.25);font-family:inherit}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+.ft{text-align:center;padding:20px 0 4px;font-size:11px;color:var(--ink3);font-weight:500}
+.ft a{color:var(--blue);text-decoration:none;font-weight:600}
+
+@media(max-width:400px){
+.pill{font-size:12px;padding:8px 13px}
+.actions{flex-direction:column}
+.logo{font-size:28px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+<div class="logo">HAPPY ROLLS</div>
+<div class="logo-ar">حاپی رلس</div>
+<div class="tagline">Happiness in Every Bite</div>
+<div class="hdr-pills">
+<span class="hdr-pill">&#11088; 4.3 &middot; 224 reviews</span>
+<span class="hdr-pill">Kakkanad, Kochi</span>
+<span class="hdr-pill">Shawarma</span>
+</div>
+</div>
+
+<div class="cta">
+<span style="font-size:20px">&#9997;&#65039;</span>
+<span>Loved your meal? Help us become <b>Kakkanad's #1 shawarma spot</b>. Takes 30 seconds.</span>
+</div>
+
+<div class="cd">
+<div class="cd-title">I visited as a...</div>
+<div class="temps">
+<button class="temp" onclick="applyTemplate('first',this)">First timer</button>
+<button class="temp" onclick="applyTemplate('regular',this)">Regular</button>
+<button class="temp" onclick="applyTemplate('family',this)">Family outing</button>
+<button class="temp" onclick="applyTemplate('delivery',this)">Delivery</button>
+<button class="temp" onclick="applyTemplate('latenight',this)">Late night</button>
+</div>
+<div class="cd-title">Rate your experience</div>
+<div class="stars" id="stars">
+<button class="star" data-val="1">&#9733;</button>
+<button class="star" data-val="2">&#9733;</button>
+<button class="star" data-val="3">&#9733;</button>
+<button class="star" data-val="4">&#9733;</button>
+<button class="star" data-val="5">&#9733;</button>
+</div>
+</div>
+
+<div class="cd">
+<div class="cd-title">Your name (optional)</div>
+<input type="text" class="input" id="userName" placeholder="Rahul, Fathima, Arun...">
+</div>
+
+<div class="cd">
+<div class="cd-title">Tap what you loved</div>
+
+<div class="cat-hd">Shawarma &amp; Food</div>
+<div class="pills">
+<button class="pill" data-phrase="best shawarma in Kakkanad">Best in Kakkanad</button>
+<button class="pill" data-phrase="perfectly grilled and juicy shawarma rolls">Juicy rolls</button>
+<button class="pill" data-phrase="authentic Middle Eastern flavors">Authentic taste</button>
+<button class="pill" data-phrase="generous portion sizes for the price">Big portions</button>
+<button class="pill" data-phrase="their healthy falafel is a must-try">Healthy falafel</button>
+<button class="pill" data-phrase="amazing garlic sauce and dips">Amazing sauces</button>
+<button class="pill" data-phrase="freshly prepared every time">Always fresh</button>
+<button class="pill" data-phrase="the chicken shawarma roll is addictive">Chicken shawarma</button>
+<button class="pill pill-neg" data-cat-neg="food" onclick="toggleNeg('food',this)">Wasn't pleased</button>
+</div>
+<div class="neg-input-wrap" id="neg-food"><textarea class="neg-input" data-neg="food" placeholder="What could be better about the food?" oninput="buildReview()"></textarea></div>
+
+<div class="cat-hd">Hygiene &amp; Freshness</div>
+<div class="pills">
+<button class="pill" data-phrase="spotlessly clean kitchen and dining area">Clean kitchen</button>
+<button class="pill" data-phrase="hygienic food preparation you can trust">Hygienic prep</button>
+<button class="pill" data-phrase="fresh ingredients — you can taste the difference">Fresh ingredients</button>
+<button class="pill" data-phrase="well-maintained and clean restaurant">Clean restaurant</button>
+<button class="pill pill-neg" data-cat-neg="hygiene" onclick="toggleNeg('hygiene',this)">Wasn't pleased</button>
+</div>
+<div class="neg-input-wrap" id="neg-hygiene"><textarea class="neg-input" data-neg="hygiene" placeholder="What could be better about hygiene?" oninput="buildReview()"></textarea></div>
+
+<div class="cat-hd">Service</div>
+<div class="pills">
+<button class="pill" data-phrase="friendly and welcoming staff">Friendly staff</button>
+<button class="pill" data-phrase="super quick service even during rush hours">Quick service</button>
+<button class="pill" data-phrase="the team really cares about quality">Quality focused</button>
+<button class="pill" data-phrase="staff remembers regular customers by name">Personal touch</button>
+<button class="pill pill-neg" data-cat-neg="service" onclick="toggleNeg('service',this)">Wasn't pleased</button>
+</div>
+<div class="neg-input-wrap" id="neg-service"><textarea class="neg-input" data-neg="service" placeholder="What could be better about the service?" oninput="buildReview()"></textarea></div>
+
+<div class="cat-hd">Vibe &amp; Location</div>
+<div class="pills">
+<button class="pill" data-phrase="cozy little spot with great energy">Cozy spot</button>
+<button class="pill" data-phrase="perfect place for a family dinner in Kakkanad">Family friendly</button>
+<button class="pill" data-phrase="the best late night food spot near Koovapadam">Late night gem</button>
+<button class="pill" data-phrase="easy to find near Cochin College">Easy to find</button>
+<button class="pill" data-phrase="nice drive-through option for quick bites">Drive-through</button>
+<button class="pill pill-neg" data-cat-neg="vibe" onclick="toggleNeg('vibe',this)">Wasn't pleased</button>
+</div>
+<div class="neg-input-wrap" id="neg-vibe"><textarea class="neg-input" data-neg="vibe" placeholder="What could be better about the vibe?" oninput="buildReview()"></textarea></div>
+
+<div class="cat-hd">Value for Money</div>
+<div class="pills">
+<button class="pill" data-phrase="incredible value — best shawarma under ₹200">Under ₹200</button>
+<button class="pill" data-phrase="affordable and tasty — can't ask for more">Affordable</button>
+<button class="pill" data-phrase="best shawarma deal in Kochi honestly">Best deal in Kochi</button>
+<button class="pill pill-neg" data-cat-neg="value" onclick="toggleNeg('value',this)">Wasn't pleased</button>
+</div>
+<div class="neg-input-wrap" id="neg-value"><textarea class="neg-input" data-neg="value" placeholder="What could be better about pricing?" oninput="buildReview()"></textarea></div>
+
+<div class="cat-hd">Delivery</div>
+<div class="pills">
+<button class="pill" data-phrase="delivery was fast and food arrived hot">Fast delivery</button>
+<button class="pill" data-phrase="great packaging — nothing spilled">Good packaging</button>
+<button class="pill" data-phrase="tastes just as good on delivery as dine-in">Fresh on delivery</button>
+<button class="pill pill-neg" data-cat-neg="delivery" onclick="toggleNeg('delivery',this)">Wasn't pleased</button>
+</div>
+<div class="neg-input-wrap" id="neg-delivery"><textarea class="neg-input" data-neg="delivery" placeholder="What could be better about delivery?" oninput="buildReview()"></textarea></div>
+</div>
+
+<div class="cd">
+<div class="cd-title">Your review</div>
+<textarea class="input" id="reviewText" placeholder="Tap the phrases above to build your review, or write your own..."></textarea>
+<div class="meta">
+<span class="meta-chars" id="charCount">0 chars</span>
+<span class="seo seo-lo" id="seoScore">SEO: Low</span>
+</div>
+</div>
+
+<div class="cd">
+<div class="cd-title">Add a photo (optional)</div>
+<div class="photo-row">
+<label class="photo-btn" for="camIn">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+Take photo
+</label>
+<label class="photo-btn" for="galIn">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+From library
+</label>
+</div>
+<input type="file" id="camIn" accept="image/*" capture="environment" style="display:none" onchange="handlePhotos(this)">
+<input type="file" id="galIn" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
+<div class="photo-thumbs" id="photoThumbs"></div>
+</div>
+
+<div class="actions">
+<button class="btn btn-copy" onclick="copyReview()">Copy</button>
+<button class="btn btn-post" onclick="postToGoogle()">Post on Google</button>
+</div>
+
+<div class="glink-panel" id="glinkPanel">
+<p><strong>Review copied!</strong> Tap below to open Google Maps and paste your review.</p>
+<a class="glink-btn" href="https://www.google.com/maps/search/Happy+Rolls+Kakkanad+Kochi" target="_blank" rel="noopener">
+<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
+Open Happy Rolls on Google Maps
+</a>
+</div>
+
+<div class="prev" id="preview" style="display:none">
+<div class="cd-title">Google review preview</div>
+<div class="prev-top">
+<div class="prev-av" id="prevAv">?</div>
+<div>
+<div class="prev-name" id="prevName">Your name</div>
+<div class="prev-stars" id="prevStars"></div>
+</div>
+</div>
+<div class="prev-body" id="prevBody"></div>
+<div class="prev-photos" id="prevPhotos"></div>
+</div>
+
+<div class="ft">
+<div>Happy Rolls &bull; Koovapadam, Kakkanad &bull; Opens 4 PM daily</div>
+<div style="margin-top:4px"><a href="https://www.instagram.com/happyrolls.in/" target="_blank">@happyrolls.in</a></div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let rating=0,selectedPhrases=[],currentTemplate='',photos=[];
+const brand='Happy Rolls';
+
+const openers={
+first:["Just had my first meal at "+brand+" and I'm genuinely impressed.","Walked into "+brand+" not knowing what to expect — walked out a fan.","Someone recommended "+brand+" to me and honestly, they were right.","Finally tried "+brand+" after hearing so much about it. Did not disappoint."],
+regular:["Been going to "+brand+" for a while now and the consistency is unreal.","Another visit to "+brand+", another great meal. They just don't miss.",""+brand+" has become my go-to spot and there's a reason for that.","Back at "+brand+" again — quality hasn't dropped one bit."],
+family:["Took the whole family to "+brand+" over the weekend and everyone was happy.","Family dinner at "+brand+" was a hit — even the picky eaters cleaned their plates.","We went to "+brand+" as a family and honestly, it was the best meal we've had in a while."],
+delivery:["Ordered from "+brand+" for delivery last night and I was surprised by how good it was.","Got "+brand+" delivered to the house and it showed up quick and fresh.","Delivery from "+brand+" was smooth — food arrived hot and well packed."],
+latenight:["Stopped by "+brand+" late at night when nothing else was open — so glad I did.",""+brand+" saved my late night hunger. Perfect timing, perfect food.","If you need a solid meal after 10 PM in Kakkanad, "+brand+" is the answer."]
+};
+const closers={
+first:["Will definitely be back soon. If you're anywhere near Kakkanad and haven't tried this place, you're missing out.","Genuinely one of the better shawarma spots I've been to. Looking forward to the next visit.","Going to be a regular here for sure. Kochi needed a place like this."],
+regular:["Honestly the most reliable shawarma spot in Kakkanad. Keep doing what you're doing.","If you haven't been here yet, just go. You'll thank me later.","This is what consistency looks like. Happy Rolls gets it."],
+family:["Great spot for families in Kochi. We'll be coming back for sure.","Everyone left full and happy — that's all you can ask for with a family meal.","Kids already asking when we're going back. That says it all."],
+delivery:["Might be the best delivery shawarma option in Kakkanad right now. Highly recommend.","If you're ordering in, give Happy Rolls a try. You won't be disappointed.","Solid delivery experience all around. Will order again."],
+latenight:["Best late night food option near Koovapadam, hands down. They open at 4 PM and that's exactly when you need them.","This place is a lifesaver for late night cravings in Kakkanad.","Glad to know there's a reliable late night spot in the area now."]
+};
+
+const connSingle=["Really appreciated the ","The standout for me was the ","Gotta say, the ","What got me was the "];
+const connMultiPre=["The ","What stood out — ","Highlights were "];
+const connMultiMid=[" and also the "," plus the "," and "," along with the "];
+const connMany=["Between the "," and the "," — they've got the full package."];
+
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+
+document.querySelectorAll('.star').forEach(s=>{s.addEventListener('click',()=>{
+rating=parseInt(s.dataset.val);
+document.querySelectorAll('.star').forEach((el,i)=>el.classList.toggle('active',i<rating));
+buildReview();
+})});
+
+document.querySelectorAll('.pill:not(.pill-neg)').forEach(btn=>{btn.addEventListener('click',()=>{
+const p=btn.dataset.phrase;
+btn.classList.toggle('selected');
+if(btn.classList.contains('selected'))selectedPhrases.push(p);
+else selectedPhrases=selectedPhrases.filter(x=>x!==p);
+buildReview();
+})});
+
+function toggleNeg(cat,el){
+el.classList.toggle('selected');
+const wrap=document.getElementById('neg-'+cat);
+wrap.classList.toggle('open');
+if(!el.classList.contains('selected')){document.querySelector('[data-neg="'+cat+'"]').value='';buildReview()}
+else wrap.querySelector('.neg-input').focus();
+}
+
+function applyTemplate(type,el){currentTemplate=type;document.querySelectorAll('.temp').forEach(b=>b.classList.remove('active'));if(el)el.classList.add('active');buildReview()}
+
+function buildReview(){
+let parts=[];
+const t=currentTemplate;
+if(t&&openers[t])parts.push(pick(openers[t]));
+
+if(selectedPhrases.length>0){
+if(selectedPhrases.length===1){
+parts.push(pick(connSingle)+selectedPhrases[0]+".");
+}else if(selectedPhrases.length===2){
+parts.push(pick(connMultiPre)+selectedPhrases[0]+pick(connMultiMid)+selectedPhrases[1]+".");
+}else if(selectedPhrases.length<=4){
+const last=selectedPhrases[selectedPhrases.length-1];
+const rest=selectedPhrases.slice(0,-1).join(', ');
+parts.push(pick(connMultiPre)+rest+", and "+last+".");
+}else{
+const mid=Math.ceil(selectedPhrases.length/2);
+const f=selectedPhrases.slice(0,mid),s=selectedPhrases.slice(mid);
+parts.push(pick(connMultiPre)+f.join(', ')+".");
+parts.push("On top of that — "+s.join(', ')+".");
+}
+}
+
+const negs=[];
+document.querySelectorAll('.neg-input').forEach(inp=>{const v=inp.value.trim();if(v)negs.push(v)});
+if(negs.length===1)parts.push("Only thing I'd say — "+negs[0]+".");
+else if(negs.length>1)parts.push("Couple of things that could be better: "+negs.join('. ')+". But overall still a solid experience.");
+
+if(t&&closers[t])parts.push(pick(closers[t]));
+
+document.getElementById('reviewText').value=parts.join(' ');
+updateMeta();updatePreview();
+}
+
+document.getElementById('reviewText').addEventListener('input',()=>{updateMeta();updatePreview()});
+document.getElementById('userName').addEventListener('input',()=>{updatePreview()});
+
+function updateMeta(){
+const text=document.getElementById('reviewText').value,len=text.length;
+document.getElementById('charCount').textContent=len+' chars';
+const el=document.getElementById('seoScore');
+const kws=['shawarma','kakkanad','kochi','happy rolls','clean','hygienic','fresh','best','falafel','roll','authentic','delivery','family','late night','affordable','koovapadam'];
+let hits=0;kws.forEach(k=>{if(text.toLowerCase().includes(k))hits++});
+let s=Math.min(100,Math.round((hits/5)*50+Math.min(len/4,50)));
+if(s>=65){el.textContent='SEO: High ('+s+')';el.className='seo seo-hi'}
+else if(s>=35){el.textContent='SEO: Medium ('+s+')';el.className='seo seo-mid'}
+else{el.textContent='SEO: Low ('+s+')';el.className='seo seo-lo'}
+}
+
+function updatePreview(){
+const text=document.getElementById('reviewText').value,name=document.getElementById('userName').value||'Happy Customer',prev=document.getElementById('preview');
+if(text.length>0||rating>0){
+prev.style.display='block';
+document.getElementById('prevAv').textContent=name.charAt(0).toUpperCase();
+document.getElementById('prevName').textContent=name;
+document.getElementById('prevStars').textContent='★'.repeat(rating)+'☆'.repeat(5-rating);
+document.getElementById('prevBody').textContent=text||'Tap phrases to build your review...';
+const pp=document.getElementById('prevPhotos');pp.innerHTML='';
+photos.forEach(p=>{const img=document.createElement('img');img.src=p;pp.appendChild(img)});
+}else prev.style.display='none';
+}
+
+function handlePhotos(input){
+for(let i=0;i<input.files.length&&photos.length<5;i++){
+const r=new FileReader();
+r.onload=e=>{photos.push(e.target.result);renderPhotos();updatePreview()};
+r.readAsDataURL(input.files[i]);
+}input.value='';
+}
+function renderPhotos(){
+const c=document.getElementById('photoThumbs');c.innerHTML='';
+photos.forEach((src,i)=>{
+const w=document.createElement('div');w.className='photo-wrap';
+const img=document.createElement('img');img.src=src;img.className='photo-thumb';
+const rm=document.createElement('button');rm.className='photo-rm';rm.textContent='×';
+rm.onclick=()=>{photos.splice(i,1);renderPhotos();updatePreview()};
+w.appendChild(img);w.appendChild(rm);c.appendChild(w);
+});
+}
+
+function copyReview(){
+const text=document.getElementById('reviewText').value;
+if(!text){showToast('Tap some phrases first');return}
+doCopy(text);showToast('Copied to clipboard');
+}
+
+function postToGoogle(){
+const text=document.getElementById('reviewText').value;
+if(!text){showToast('Build your review first');return}
+doCopy(text);
+document.getElementById('glinkPanel').style.display='block';
+document.getElementById('glinkPanel').scrollIntoView({behavior:'smooth',block:'center'});
+showToast('Review copied — now tap the link below');
+}
+
+function doCopy(t){
+try{navigator.clipboard.writeText(t)}catch(e){
+const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;left:-9999px';
+document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a)}
+}
+
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200)}
+updateMeta();
+</script>
+</body>
+</html>
